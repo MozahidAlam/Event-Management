@@ -26,7 +26,7 @@
                     <h1>Make Memorable Events, Effortlessly</h1>
                     <p>Create, manage and grow events — conferences, workshops, meetups — all from one beautiful dashboard.</p>
                     <div class="hero-actions">
-                        <a class="btn primary" href="#signup">Reserve Your Spot</a>
+                        <a class="btn primary open-pay" href="#signup" data-ticket="general">Reserve Your Spot</a>
                         <a class="btn ghost" href="#features">Learn More</a>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
                     <div class="card">
                         <h3>Next: Tech Summit 2026</h3>
                         <p>May 21 • San Francisco, CA</p>
-                        <a class="btn small" href="#signup">Buy Tickets</a>
+                        <a class="btn small open-pay" href="#signup" data-ticket="general">Buy Tickets</a>
                     </div>
                 </div>
             </div>
@@ -97,7 +97,7 @@
                     <h2>Reserve your spot</h2>
                     <p>Join hundreds of professionals for a day of learning and networking.</p>
                 </div>
-                <form class="signup-form" onsubmit="handleSignup(event)">
+                <form class="signup-form" onsubmit="openPaymentFromForm(event)">
                     <input type="email" id="email" name="email" placeholder="Your email" required>
                     <select id="ticket" name="ticket">
                         <option value="general">General Admission — $99</option>
@@ -120,13 +120,131 @@
     </footer>
 
     <script>
-        function handleSignup(e){
+        // Open payment modal from signup form
+        function openPaymentFromForm(e){
             e.preventDefault();
             const email = document.getElementById('email').value.trim();
-            if(!email){ alert('Please enter your email'); return; }
-            alert('Thanks! A confirmation was sent to ' + email);
-            e.target.reset();
+            const ticket = document.getElementById('ticket').value;
+            openPaymentModal({email, ticket});
+        }
+
+        function openPaymentModal({email = '', ticket = 'general'} = {}){
+            const modal = document.getElementById('payment-modal');
+            modal.querySelector('#pay-email').value = email;
+            modal.querySelector('#pay-ticket').value = ticket;
+            // default to bkash
+            modal.querySelector('input[name="payment-method"][value="bkash"]').checked = true;
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePaymentModal(){
+            const modal = document.getElementById('payment-modal');
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // wire open-pay links
+        document.addEventListener('DOMContentLoaded', function(){
+            document.querySelectorAll('.open-pay').forEach(el=>{
+                el.addEventListener('click', function(e){
+                    e.preventDefault();
+                    const ticket = el.dataset.ticket || 'general';
+                    openPaymentModal({ticket});
+                });
+            });
+
+            // close handlers
+            document.getElementById('payment-close').addEventListener('click', closePaymentModal);
+            document.getElementById('payment-modal').addEventListener('click', function(e){
+                if(e.target.id === 'payment-modal') closePaymentModal();
+            });
+
+            // payment form submit
+            document.getElementById('payment-form').addEventListener('submit', function(e){
+                e.preventDefault();
+                const method = document.querySelector('input[name="payment-method"]:checked').value;
+                if(method === 'bkash'){
+                    processBkashPayment();
+                } else {
+                    simulatePaymentSuccess(method);
+                }
+            });
+        });
+
+        function processBkashPayment(){
+            const phone = document.getElementById('bkash-phone').value.trim();
+            if(!phone){ alert('Enter your Bkash number'); return; }
+            const payBtn = document.getElementById('pay-now');
+            payBtn.disabled = true; payBtn.textContent = 'Processing...';
+
+            // Call demo backend to create an order / payment (replace with real integration server)
+            fetch('http://localhost:4000/api/pay', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: document.getElementById('pay-email').value,
+                    ticket: document.getElementById('pay-ticket').value || 'general',
+                    method: 'bkash',
+                    phone
+                })
+            }).then(r => r.json()).then(data => {
+                payBtn.disabled = false; payBtn.textContent = 'Pay Now';
+                if(data && data.success && data.order){
+                    closePaymentModal();
+                    showConfirmation('Bkash order created — ref ' + data.order.providerReference);
+                    // optionally poll order status or provide further instructions to user
+                } else {
+                    alert('Payment failed to initialize');
+                }
+            }).catch(err => {
+                payBtn.disabled = false; payBtn.textContent = 'Pay Now';
+                alert('Network error connecting to payment server');
+                console.error(err);
+            });
+        }
+
+        function simulatePaymentSuccess(method){
+            const payBtn = document.getElementById('pay-now');
+            payBtn.disabled = true; payBtn.textContent = 'Processing...';
+            setTimeout(()=>{
+                payBtn.disabled = false; payBtn.textContent = 'Pay Now';
+                closePaymentModal();
+                showConfirmation(method + ' payment simulated — success');
+            }, 1000);
+        }
+
+        function showConfirmation(msg){
+            const el = document.createElement('div');
+            el.className = 'payment-confirm';
+            el.textContent = msg;
+            document.body.prepend(el);
+            setTimeout(()=> el.classList.add('visible'), 40);
+            setTimeout(()=> el.classList.remove('visible'), 4200);
+            setTimeout(()=> el.remove(), 4800);
         }
     </script>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <button id="payment-close" class="modal-close" aria-label="Close">×</button>
+            <h3>Complete your purchase</h3>
+            <form id="payment-form">
+                <input id="pay-email" name="email" type="email" placeholder="Email (optional)" />
+                <input id="pay-ticket" name="ticket" type="hidden" />
+                <div class="methods">
+                    <label><input type="radio" name="payment-method" value="bkash" checked> Bkash</label>
+                    <label><input type="radio" name="payment-method" value="card"> Card</label>
+                    <label><input type="radio" name="payment-method" value="paypal"> PayPal</label>
+                </div>
+                <div id="bkash-area" class="bkash-area">
+                    <input id="bkash-phone" type="tel" placeholder="Bkash number e.g. 017XXXXXXXX" />
+                    <small>We'll simulate an OTP flow for demo.</small>
+                </div>
+                <button id="pay-now" class="btn primary" type="submit">Pay Now</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
