@@ -22,7 +22,7 @@
     <main>
         <section class="hero">
             <div class="container hero-inner">
-                <div class="hero-copy">
+                <div class="hero-copy will-animate" data-anim="fade-up" data-anim-delay="0">
                     <h1>Make Memorable Events, Effortlessly</h1>
                     <p>Create, manage and grow events — conferences, workshops, meetups — all from one beautiful dashboard.</p>
                     <div class="hero-actions">
@@ -30,7 +30,7 @@
                         <a class="btn ghost" href="#features">Learn More</a>
                     </div>
                 </div>
-                <div class="hero-card">
+                <div class="hero-card will-animate" data-anim="pop" data-anim-delay="120">
                     <div class="card">
                         <h3>Next: Tech Summit 2026</h3>
                         <p>May 21 • San Francisco, CA</p>
@@ -43,15 +43,15 @@
         <section id="features" class="section container">
             <h2 class="section-title">Features</h2>
             <div class="grid grid-3">
-                <div class="feature">
+                <div class="feature will-animate" data-anim="fade-up" data-anim-delay="60">
                     <h3>Easy Scheduling</h3>
                     <p>Drag-and-drop schedule builder with speaker and room management.</p>
                 </div>
-                <div class="feature">
+                <div class="feature will-animate" data-anim="fade-up" data-anim-delay="120">
                     <h3>Ticketing & Payments</h3>
                     <p>Secure checkout, promo codes, and flexible ticket types.</p>
                 </div>
-                <div class="feature">
+                <div class="feature will-animate" data-anim="fade-up" data-anim-delay="180">
                     <h3>Analytics</h3>
                     <p>Real-time attendee stats, revenue reports, and custom exports.</p>
                 </div>
@@ -62,21 +62,21 @@
             <div class="container">
                 <h2 class="section-title">Featured Speakers</h2>
                 <div class="grid grid-3 speakers">
-                    <div class="speaker-card">
-                        <img src="https://via.placeholder.com/200" alt="Speaker">
-                        <h4>Alex Johnson</h4>
-                        <p>CTO, Innovate Labs</p>
-                    </div>
-                    <div class="speaker-card">
-                        <img src="https://via.placeholder.com/200" alt="Speaker">
-                        <h4>Priya Singh</h4>
-                        <p>Product Lead, NextWave</p>
-                    </div>
-                    <div class="speaker-card">
-                        <img src="https://via.placeholder.com/200" alt="Speaker">
-                        <h4>Marcus Lee</h4>
-                        <p>Founder, CodeWorks</p>
-                    </div>
+                        <div class="speaker-card will-animate" data-anim="float" data-anim-delay="60">
+                            <img src="https://via.placeholder.com/200" alt="Speaker">
+                            <h4>Alex Johnson</h4>
+                            <p>CTO, Innovate Labs</p>
+                        </div>
+                        <div class="speaker-card will-animate" data-anim="float" data-anim-delay="120">
+                            <img src="https://via.placeholder.com/200" alt="Speaker">
+                            <h4>Priya Singh</h4>
+                            <p>Product Lead, NextWave</p>
+                        </div>
+                        <div class="speaker-card will-animate" data-anim="float" data-anim-delay="180">
+                            <img src="https://via.placeholder.com/200" alt="Speaker">
+                            <h4>Marcus Lee</h4>
+                            <p>Founder, CodeWorks</p>
+                        </div>
                 </div>
             </div>
         </section>
@@ -93,11 +93,11 @@
 
         <section id="signup" class="section signup">
             <div class="container split">
-                <div>
+                <div class="will-animate" data-anim="fade-up" data-anim-delay="60">
                     <h2>Reserve your spot</h2>
                     <p>Join hundreds of professionals for a day of learning and networking.</p>
                 </div>
-                <form class="signup-form" onsubmit="openPaymentFromForm(event)">
+                <form class="signup-form will-animate" data-anim="fade-up" data-anim-delay="120" onsubmit="openPaymentFromForm(event)">
                     <input type="email" id="email" name="email" placeholder="Your email" required>
                     <select id="ticket" name="ticket">
                         <option value="general">General Admission — $99</option>
@@ -171,6 +171,28 @@
                 }
             });
         });
+
+        // Simple scroll-trigger animations using IntersectionObserver
+        (function(){
+            const items = document.querySelectorAll('.will-animate');
+            if(!items.length) return;
+            const io = new IntersectionObserver((entries)=>{
+                entries.forEach(entry=>{
+                    if(entry.isIntersecting){
+                        const el = entry.target;
+                        const delay = parseInt(el.dataset.animDelay || el.getAttribute('data-anim-delay') || 0,10);
+                        setTimeout(()=> el.classList.add('animate'), delay);
+                        io.unobserve(el);
+                    }
+                });
+            },{threshold:0.12});
+            items.forEach((el)=> io.observe(el));
+
+            // page-load hero entrance
+            window.addEventListener('load', ()=>{
+                document.body.classList.add('loaded');
+            });
+        })();
 
         function processBkashPayment(){
             const phone = document.getElementById('bkash-phone').value.trim();
