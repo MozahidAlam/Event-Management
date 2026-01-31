@@ -1,0 +1,56 @@
+:root{
+	--bg:#0f1724;
+	--card:#0b1220;
+	--muted:#9aa4b2;
+	--accent:#6c5ce7;
+	--accent-2:#00d4ff;
+	--glass: rgba(255,255,255,0.04);
+	--radius:12px;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Helvetica,Arial,sans-serif;color:#e6eef6;background:linear-gradient(180deg,#071029 0%, #071825 100%)}
+.container{max-width:1100px;margin:0 auto;padding:28px}
+.site-header{backdrop-filter:blur(6px);background:transparent;position:sticky;top:0;z-index:20}
+.header-inner{display:flex;align-items:center;justify-content:space-between}
+.brand{color:white;font-weight:700;text-decoration:none;font-size:1.1rem}
+.nav a{color:var(--muted);margin-left:18px;text-decoration:none}
+.nav a.cta{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;padding:8px 12px;border-radius:8px}
+.hero{padding:80px 0;background:linear-gradient(120deg, rgba(108,92,231,0.12), transparent 40%)}
+.hero-inner{display:flex;gap:30px;align-items:center}
+.hero-copy{flex:1;color:white}
+.hero-copy h1{font-size:2.2rem;margin:0 0 12px}
+.hero-copy p{color:var(--muted);margin:0 0 18px}
+.hero-actions .btn{margin-right:12px}
+.hero-card{width:320px}
+.card{background:var(--card);padding:20px;border-radius:16px;color:white;box-shadow:0 6px 24px rgba(2,6,23,0.6)}
+.section{padding:48px 0}
+.section.alt{background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent)}
+.section-title{color:white;margin:0 0 20px}
+.grid{display:grid;gap:18px}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.feature{background:var(--glass);padding:18px;border-radius:12px;color:white}
+.speaker-card{text-align:center;background:transparent;padding:12px;color:white}
+.speaker-card img{width:100%;height:auto;border-radius:10px;display:block;margin-bottom:12px}
+.schedule{list-style:none;padding:0;margin:0;color:var(--muted)}
+.signup{background:linear-gradient(90deg, rgba(108,92,231,0.06), rgba(0,212,255,0.02));padding:36px 0}
+.split{display:flex;gap:24px;align-items:center}
+.signup-form{display:flex;flex-direction:column;gap:10px;min-width:260px}
+input[type="email"],select{padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:white}
+.btn{display:inline-block;text-decoration:none;border-radius:10px;padding:10px 16px;border:0;cursor:pointer}
+.btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white}
+.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+.btn.small{padding:8px 12px;font-size:0.9rem}
+.site-footer{padding:20px 0;color:var(--muted)}
+.footer-inner{display:flex;justify-content:space-between;align-items:center}
+
+@media(max-width:900px){
+	.grid-3{grid-template-columns:repeat(2,1fr)}
+	.hero-inner{flex-direction:column}
+	.hero-card{width:100%}
+	.split{flex-direction:column}
+}
+@media(max-width:600px){
+	.grid-3{grid-template-columns:1fr}
+	.nav a{display:none}
+	.hero-copy h1{font-size:1.6rem}
+}

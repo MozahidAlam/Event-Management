@@ -1,11 +1,132 @@
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Management</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>EventPro — Event Management & Conferences</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <h2>Welcome to Event Management</h2>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="#">EventPro</a>
+            <nav class="nav">
+                <a href="#features">Features</a>
+                <a href="#speakers">Speakers</a>
+                <a href="#schedule">Schedule</a>
+                <a class="cta" href="#signup">Get Tickets</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container hero-inner">
+                <div class="hero-copy">
+                    <h1>Make Memorable Events, Effortlessly</h1>
+                    <p>Create, manage and grow events — conferences, workshops, meetups — all from one beautiful dashboard.</p>
+                    <div class="hero-actions">
+                        <a class="btn primary" href="#signup">Reserve Your Spot</a>
+                        <a class="btn ghost" href="#features">Learn More</a>
+                    </div>
+                </div>
+                <div class="hero-card">
+                    <div class="card">
+                        <h3>Next: Tech Summit 2026</h3>
+                        <p>May 21 • San Francisco, CA</p>
+                        <a class="btn small" href="#signup">Buy Tickets</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="section container">
+            <h2 class="section-title">Features</h2>
+            <div class="grid grid-3">
+                <div class="feature">
+                    <h3>Easy Scheduling</h3>
+                    <p>Drag-and-drop schedule builder with speaker and room management.</p>
+                </div>
+                <div class="feature">
+                    <h3>Ticketing & Payments</h3>
+                    <p>Secure checkout, promo codes, and flexible ticket types.</p>
+                </div>
+                <div class="feature">
+                    <h3>Analytics</h3>
+                    <p>Real-time attendee stats, revenue reports, and custom exports.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="speakers" class="section alt">
+            <div class="container">
+                <h2 class="section-title">Featured Speakers</h2>
+                <div class="grid grid-3 speakers">
+                    <div class="speaker-card">
+                        <img src="https://via.placeholder.com/200" alt="Speaker">
+                        <h4>Alex Johnson</h4>
+                        <p>CTO, Innovate Labs</p>
+                    </div>
+                    <div class="speaker-card">
+                        <img src="https://via.placeholder.com/200" alt="Speaker">
+                        <h4>Priya Singh</h4>
+                        <p>Product Lead, NextWave</p>
+                    </div>
+                    <div class="speaker-card">
+                        <img src="https://via.placeholder.com/200" alt="Speaker">
+                        <h4>Marcus Lee</h4>
+                        <p>Founder, CodeWorks</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="schedule" class="section container">
+            <h2 class="section-title">Day 1 — Schedule</h2>
+            <ul class="schedule">
+                <li><strong>09:00</strong> — Opening Keynote</li>
+                <li><strong>10:30</strong> — Workshop: Building Product</li>
+                <li><strong>13:00</strong> — Lunch & Networking</li>
+                <li><strong>15:00</strong> — Panel: Scaling Teams</li>
+            </ul>
+        </section>
+
+        <section id="signup" class="section signup">
+            <div class="container split">
+                <div>
+                    <h2>Reserve your spot</h2>
+                    <p>Join hundreds of professionals for a day of learning and networking.</p>
+                </div>
+                <form class="signup-form" onsubmit="handleSignup(event)">
+                    <input type="email" id="email" name="email" placeholder="Your email" required>
+                    <select id="ticket" name="ticket">
+                        <option value="general">General Admission — $99</option>
+                        <option value="vip">VIP — $199</option>
+                    </select>
+                    <button type="submit" class="btn primary">Get Ticket</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>© 2026 EventPro. Built for unforgettable experiences.</p>
+            <nav class="footer-nav">
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+            </nav>
+        </div>
+    </footer>
+
+    <script>
+        function handleSignup(e){
+            e.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            if(!email){ alert('Please enter your email'); return; }
+            alert('Thanks! A confirmation was sent to ' + email);
+            e.target.reset();
+        }
+    </script>
 </body>
 </html>
